@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Product Cards with Flip</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    font-family: 'Libre Baskerville', serif;
+    background-color: white;
+    color: black;
+    margin: 0;
+    padding: 2.5rem;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    gap: 2.5rem;
+  }
+
+  /* Карточка с переворотом */
+  .card {
+    perspective: 1000px;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+
+  .card:hover .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  }
+
+  .card-front img, .card-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-front {
+    background: white;
+  }
+
+  .card-back {
+    background: white;
+    transform: rotateY(180deg);
+  }
+
+  .card-title {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: black;
+    background: rgba(255,255,255,0.8);
+    padding: 0.4rem 0;
+  }
+
+  .card-price {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    font-weight: 600;
+    font-size: 1rem;
+    color: black;
+    background: rgba(255,255,255,0.8);
+    padding: 0.2rem 0;
+  }
+
+</style>
+</head>
+<body>
+<div id="productsContainer" style="padding:20px; display:flex; flex-wrap: wrap; gap: 20px;"></div>
+
+<div class="cards">
+
+  <div class="card" tabindex="0">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="2.2.jpg" alt="pants front" />
+        <div class="card-price">2600.00</div>
+        <div class="card-title">pants collection "velmora"</div>
+      </div>
+      <div class="card-back">
+        <img src="1.jpg" alt="pants back" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card" tabindex="0">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="5.jpg" alt="t-shirt front" />
+        <div class="card-price">1200.00</div>
+        <div class="card-title">t-shirt "mi akinness"</div>
+      </div>
+      <div class="card-back">
+        <img src="4.jpg" alt="t-shirt back" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card" tabindex="0">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="6.jpg" alt="t-shirt front" />
+        <div class="card-price">1150.00</div>
+        <div class="card-title">t-shirt "sleep tee"</div>
+      </div>
+      <div class="card-back">
+        <img src="7.jpg" alt="t-shirt back" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card" tabindex="0">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="3.3.jpg" alt="tote “etched void” front" />
+        <div class="card-price">1800.00</div>
+        <div class="card-title">collection velmora</div>
+      </div>
+      <div class="card-back">
+        <img src="3.4.jpg" alt="tote “etched void” back" />
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  const page = window.location.pathname.split('/').pop(); // 'homme.html' или 'collection.html'
+  const storageKey = page === 'homme.html' ? 'items_homme' : (page === 'collection.html' ? 'items_collection' : '');
+
+  if (storageKey) {
+    const items = JSON.parse(localStorage.getItem(storageKey)) || [];
+    const container = document.getElementById('productsContainer');
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.style.border = '1px solid #fff';
+      card.style.padding = '10px';
+      card.style.maxWidth = '300px';
+      card.style.background = '#222';
+      card.style.borderRadius = '6px';
+      card.style.flex = '1 1 300px';
+
+      card.innerHTML = `
+        <h3 style="margin-bottom: 10px;">${item.title}</h3>
+        <img src="${item.image}" alt="${item.title}" style="max-width:100%; border-radius: 4px;" />
+        <p style="margin-top: 10px;">${item.description}</p>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+</script>
+
+
+</body>
+</html>

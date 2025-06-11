@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Didot&display=swap');
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: #000;
+      font-family: 'Didot', serif;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 30px 40px;
+      border-bottom: 1px solid #000;
+      text-transform: uppercase;
+      font-weight: 400;
+      font-size: 1.8rem;
+      letter-spacing: 0.15em;
+      user-select: none;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      letter-spacing: 0.1em;
+    }
+
+    .product-summary {
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 16px 0;
+      display: flex;
+      justify-content: space-between;
+      text-transform: uppercase;
+      font-weight: 400;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 30px;
+      position: relative; /* Для автокомплита */
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #000;
+      font-family: 'Didot', serif;
+      font-size: 1rem;
+      padding: 5px 0;
+      background: none;
+      color: #000;
+      letter-spacing: 0.08em;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #000;
+      background-color: #fff;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .radio-option {
+      cursor: pointer;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+
+    input[type="radio"] {
+      accent-color: #000;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Didot', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #222;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 400;
+      border-top: 1px solid #000;
+      user-select: none;
+    }
+
+    /* Стили для автокомплита городов */
+    #cityAutocomplete {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #000;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      font-family: 'Didot', serif;
+      font-size: 1rem;
+    }
+
+    .autocomplete-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .autocomplete-item:hover {
+      background-color: #eee;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 14px;
+      }
+      header {
+        padding: 20px 15px;
+        font-size: 1.5rem;
+      }
+      main {
+        margin: 30px auto;
+        padding: 0 15px;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 12px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Можно сюда заголовок или логотип -->
+  </header>
+
+  <main>
+    <form id="checkoutForm" autocomplete="off">
+
+      <!-- Убрана секция "Ваш заказ" -->
+
+      <section>
+        <h2>Доставка</h2>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="delivery" value="novaposhta" checked />
+            Новая Почта — 70 ₴
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Оплата</h2>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="payment" value="card" checked />
+            Карта Visa/Mastercard
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Адрес доставки</h2>
+
+        <div class="form-group" style="position:relative;">
+          <label for="city">Город</label>
+          <input id="city" name="city" type="text" required placeholder="Введите город" autocomplete="off" />
+          <div id="cityAutocomplete"></div> <!-- Контейнер автокомплита -->
+        </div>
+
+        <div class="form-group" id="npBranchGroup">
+          <label for="npBranch">Отделение Новой Почты</label>
+          <select id="npBranch" name="npBranch" required>
+            <option value="" disabled selected>Выберите отделение</option>
+          </select>
+        </div>
+
+      </section>
+
+      <section style="margin-top: 30px;">
+        <button type="submit">Подтвердить заказ</button>
+      </section>
+    </form>
+  </main>
+
+  <footer>
+    &copy; 2025 Himora Tsukiha
+  </footer>
+
+ <script> 
+
+  const apiKey = 'b5fd120fe7060e5eb02d161618ec0f0a';
+
+  const npBranchGroup = document.getElementById('npBranchGroup');
+  const npBranchSelect = document.getElementById('npBranch');
+  const cityInput = document.getElementById('city');
+  const cityAutocomplete = document.getElementById('cityAutocomplete');
+
+  let selectedCityRef = null;
+  let autocompleteTimeout;
+
+  async function fetchNP(calledMethod, modelName, methodProperties) {
+    const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey: apiKey,
+        modelName: modelName,
+        calledMethod: calledMethod,
+        methodProperties: methodProperties
+      })
+    });
+    const data = await response.json();
+    if (data.success) {
+      return data.data;
+    } else {
+      throw new Error(data.errors ? data.errors.join(', ') : 'Unknown error');
+    }
+  }
+
+  async function loadBranches(cityRef) {
+    npBranchSelect.innerHTML = '<option disabled>Загрузка...</option>';
+    try {
+      const branches = await fetchNP('getWarehouses', 'Address', { CityRef: cityRef });
+      if (branches.length > 0) {
+        npBranchSelect.innerHTML = '<option value="" disabled selected>Выберите отделение</option>';
+        branches.forEach(branch => {
+          npBranchSelect.insertAdjacentHTML('beforeend', `<option value="${branch.Ref}">${branch.Description} — ${branch.Address}</option>`);
+        });
+      } else {
+        npBranchSelect.innerHTML = '<option disabled>Отделения не найдены</option>';
+      }
+    } catch (e) {
+      npBranchSelect.innerHTML = '<option disabled>Ошибка загрузки отделений</option>';
+      console.error(e);
+    }
+  }
+
+  cityInput.addEventListener('input', () => {
+    const query = cityInput.value.trim();
+    selectedCityRef = null;
+    npBranchSelect.innerHTML = '<option value="" disabled selected>Выберите отделение</option>';
+
+    if (query.length < 2) {
+      cityAutocomplete.style.display = 'none';
+      cityAutocomplete.innerHTML = '';
+      return;
+    }
+
+    clearTimeout(autocompleteTimeout);
+    autocompleteTimeout = setTimeout(async () => {
+      try {
+        const cities = await fetchNP('getCities', 'Address', { FindByString: query });
+        if (cities && cities.length > 0) {
+          cityAutocomplete.innerHTML = '';
+          cities.forEach(city => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            div.textContent = city.Description;
+            div.dataset.ref = city.Ref;
+            div.onclick = () => {
+              cityInput.value = city.Description;
+              selectedCityRef = city.Ref;
+              cityAutocomplete.style.display = 'none';
+              loadBranches(selectedCityRef);
+            };
+            cityAutocomplete.appendChild(div);
+          });
+          cityAutocomplete.style.display = 'block';
+        } else {
+          cityAutocomplete.style.display = 'none';
+          cityAutocomplete.innerHTML = '';
+        }
+      } catch (e) {
+        console.error(e);
+        cityAutocomplete.style.display = 'none';
+        cityAutocomplete.innerHTML = '';
+      }
+    }, 400);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!cityInput.contains(e.target) && !cityAutocomplete.contains(e.target)) {
+      cityAutocomplete.style.display = 'none';
+    }
+  });
+
+  const monoPayUrl = 'https://send.monobank.ua/NFhLLGyi8';
+
+  document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (cityInput.value.trim() === '') {
+      alert('Пожалуйста, введите город доставки.');
+      return;
+    }
+    if (!npBranchSelect.value) {
+      alert('Пожалуйста, выберите отделение Новой Почты.');
+      return;
+    }
+
+    let cart = [];
+    try {
+      cart = JSON.parse(localStorage.getItem('cart')) || [];
+    } catch {
+      cart = [];
+    }
+
+    if (cart.length === 0) {
+      alert('Ваша корзина пуста.');
+      return;
+    }
+
+    const order = {
+      ...formData,
+      items: cart
+    };
+
+
+    try {
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      });
+
+      if (response.ok) {
+        alert('Спасибо за заказ! Подтверждение отправлено на вашу почту.');
+        localStorage.removeItem('cart');
+        e.target.reset();
+        npBranchSelect.innerHTML = '<option value="" disabled selected>Выберите отделение</option>';
+        window.location.href = monoPayUrl;
+      } 
+
+      else {
+        const err = await response.json();
+        alert('Ошибка при оформлении заказа: ' + (err.message || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      alert('Ошибка сети или сервера: ' + error.message);
+    }
+  });
+ </script>
+</body>
+</html>

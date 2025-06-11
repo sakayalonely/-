@@ -1,0 +1,25 @@
+[
+  {
+    "email": "твой_почтовый_адрес@example.com",
+    "items": [
+      {
+        "name": "Футболка ERD",
+        "size": "M",
+        "quantity": 2,
+        "price": 1200
+      }
+    ]
+  },
+  {
+    "email": "твой_почтовый_адрес@example.com",
+    "items": [
+      {
+        "name": "Футболка ERD",
+        "size": "M",
+        "quantity": 2,
+        "price": 1200
+      }
+    ],
+    "date": "2025-06-05T18:43:38.751Z"
+  }
+]

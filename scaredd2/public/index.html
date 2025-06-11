@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Главная страница</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      background: black;
+      color: white;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+
+    .left, .right {
+      width: 50%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .left {
+      background-image: url('2.jpg');
+      filter: brightness(0.7);
+    }
+
+    .right {
+      background-image: url('3.jpg');
+      filter: brightness(0.6);
+    }
+
+    .text-left {
+      position: absolute;
+      top: 50%;
+      left: 20%;
+      transform: translateY(-50%);
+      text-align: center;
+      font-size: 25px;
+      line-height: 2;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .text-left a,
+    .text-left span[contenteditable] {
+      color: white;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+    }
+
+    .text-left a:hover,
+    .text-left span[contenteditable]:hover {
+      color: #ccc;
+    }
+
+    .text-left span[contenteditable]:focus {
+      outline: none;
+      color: #ccc;
+      border-bottom: 1px solid #ccc;
+    }
+
+    #searchInput {
+      display: inline-block;
+      max-width: 200px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 2px 4px;
+      scrollbar-width: none;
+    }
+
+    #searchInput::-webkit-scrollbar {
+      display: none;
+    }
+
+    .text-right {
+      position: absolute;
+      bottom: 20%;
+      left: 54.8%;
+      transform: translateX(-50%);
+      font-size: 60px;
+      color: white;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .language-dropdown {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      user-select: none;
+      z-index: 20;
+    }
+
+    .language-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .language-dropdown.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 28px;
+      left: 0;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .language-dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: white;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #222;
+    }
+
+    .cart-link {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .cart-link a {
+      color: white;
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -16px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 18px;
+    }
+
+    /* === Админ-меню стили === */
+    #adminPanel {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(30, 30, 30, 0.9);
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 15px;
+      width: 280px;
+      font-size: 14px;
+      color: white;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      transition: max-height 0.3s ease;
+      overflow: auto;
+      max-height: 80vh;
+    }
+
+    #adminPanel.collapsed {
+      max-height: 40px;
+      padding: 5px 15px;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    #adminPanel h3 {
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: default;
+    }
+
+    #adminToggle {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #adminForm label {
+      display: block;
+      margin: 8px 0 4px;
+    }
+
+    #adminForm input[type="text"],
+    #adminForm textarea,
+    #adminForm select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #222;
+      color: white;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    #adminForm textarea {
+      height: 60px;
+    }
+
+    #adminForm input[type="file"] {
+      color: white;
+      margin-top: 6px;
+    }
+
+    #adminForm button {
+      margin-top: 12px;
+      padding: 8px 15px;
+      background: #444;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    #adminForm button:hover {
+      background: #666;
+    }
+
+    /* Список товаров */
+    #itemsList {
+      margin-top: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      border-top: 1px solid #555;
+      padding-top: 10px;
+    }
+
+    #itemsList .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 8px;
+    }
+
+    #itemsList .item img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid #555;
+    }
+
+    #itemsList .item-info {
+      flex-grow: 1;
+      font-size: 13px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    #itemsList .delete-btn {
+      background: #a00;
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      user-select: none;
+      transition: background-color 0.2s ease;
+    }
+
+    #itemsList .delete-btn:hover {
+      background: #d00;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left"></div>
+    <div class="right"></div>
+
+    <!-- Language Menu -->
+    <div class="language-dropdown" id="languageDropdown">
+      <div class="language-dropdown-toggle" id="dropdownToggle">
+        <span id="selectedLanguage">ENG</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a data-lang="en">ENG</a>
+        <a data-lang="ru">RUS</a>
+        <a data-lang="uk">UKR</a>
+      </div>
+    </div>
+
+    <!-- Navigation Text -->
+    <div class="text-left">
+      <a href="" data-key="product">PRODUCT</a>
+      <a href="homme.html" data-key="homme">HOMME</a>
+      <a href="" data-key="femme">FEMME</a>
+      <a href="collection.html" data-key="collection">COLLECTION</a>
+      <br />
+      <span contenteditable="true" data-key="" id="searchInput">SEARCH</span>
+      <a href="login.html" data-key="login">LOG IN</a>
+
+    </div>
+
+    <div class="text-right">
+      <div>111401133</div>
+      <div>11140333</div>
+    </div>
+  </div>
+
+  <!-- === Админ-меню === -->
+  <div id="adminPanel" class="collapsed" style="display:none;">
+    <h3>Админ панель</h3>
+    <button id="adminToggle">▼</button>
+    <form id="adminForm">
+      <label for="pageSelect">выбрать страницу</label>
+      <select id="pageSelect" name="page">
+        <option value="homme.html">Homme</option>
+        <option value="collection.html">Collection</option>
+      </select>
+
+      <label for="titleInput">название</label>
+      <input type="text" id="titleInput" name="title" placeholder="name" required />
+
+      <label for="descInput">описание шмотки</label>
+      <textarea id="descInput" name="description" placeholder="name2" required></textarea>
+
+      <!-- ДОБАВЬ В ФОРМУ ПОСЛЕ TEXTAREA -->
+<label for="priceInput">цена</label>
+<input type="text" id="priceInput" name="price" placeholder="1000" required />
+
+
+      <label for="imageInput">выбрать фотку</label>
+      <input type="file" id="imageInput" name="image" accept="image/*" required />
+
+      <button type="submit">добавить</button>
+    </form>
+
+    <div id="itemsList"></div>
+
+  </div>
+
+<script>
+  const isAdmin = true;
+
+  const adminPanel = document.getElementById('adminPanel');
+  const adminToggle = document.getElementById('adminToggle');
+  const adminForm = document.getElementById('adminForm');
+  const pageSelect = document.getElementById('pageSelect');
+  const itemsList = document.getElementById('itemsList');
+
+  if (isAdmin) {
+    adminPanel.style.display = 'block';
+    adminPanel.classList.add('collapsed');
+  }
+
+  adminToggle.addEventListener('click', () => {
+    if (adminPanel.classList.contains('collapsed')) {
+      adminPanel.classList.remove('collapsed');
+      adminToggle.textContent = '▲';
+    } else {
+      adminPanel.classList.add('collapsed');
+      adminToggle.textContent = '▼';
+    }
+  });
+
+  let isDragging = false;
+  let dragStartX, dragStartY;
+
+  adminPanel.addEventListener('mousedown', (e) => {
+    if (e.target === adminToggle || adminPanel.classList.contains('collapsed')) return;
+    isDragging = true;
+    dragStartX = e.clientX - adminPanel.offsetLeft;
+    dragStartY = e.clientY - adminPanel.offsetTop;
+    adminPanel.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    adminPanel.style.cursor = 'default';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    adminPanel.style.left = (e.clientX - dragStartX) + 'px';
+    adminPanel.style.top = (e.clientY - dragStartY) + 'px';
+  });
+
+  function getStorageKey(page) {
+    return page === 'homme.html' ? 'items_homme' : 'items_collection';
+  }
+
+  function renderItemsList() {
+    const page = pageSelect.value;
+    const storageKey = getStorageKey(page);
+    const items = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    if (items.length === 0) {
+      itemsList.innerHTML = '<p style="font-size:13px;opacity:0.7;">Товаров пока нет.</p>';
+      return;
+    }
+
+    itemsList.innerHTML = '';
+
+    items.forEach((item, index) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item';
+
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.alt = item.title;
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'item-info';
+      infoDiv.textContent = `${item.title} - ${item.price || '0'} грн`;
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.textContent = 'Удалить';
+      delBtn.title = 'Удалить этот товар';
+      delBtn.addEventListener('click', () => {
+        if (confirm(`Удалить товар "${item.title}"?`)) {
+          items.splice(index, 1);
+          localStorage.setItem(storageKey, JSON.stringify(items));
+          renderItemsList();
+        }
+      });
+
+      itemDiv.appendChild(img);
+      itemDiv.appendChild(infoDiv);
+      itemDiv.appendChild(delBtn);
+
+      itemsList.appendChild(itemDiv);
+    });
+  }
+
+  renderItemsList();
+  pageSelect.addEventListener('change', () => {
+    renderItemsList();
+  });
+
+  adminForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const page = adminForm.page.value;
+    const title = adminForm.title.value.trim();
+    const description = adminForm.description.value.trim();
+    const price = adminForm.price.value.trim();
+    const imageFile = adminForm.image.files[0];
+
+    if (!title || !description || !price || !imageFile) {
+      alert('Заполните все поля!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageData = reader.result;
+
+      const storageKey = getStorageKey(page);
+      const currentItems = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      currentItems.push({
+        title,
+        description,
+        price,
+        image: imageData
+      });
+
+      localStorage.setItem(storageKey, JSON.stringify(currentItems));
+
+      alert('Товар добавлен!');
+      adminForm.reset();
+      renderItemsList();
+    };
+
+    reader.readAsDataURL(imageFile);
+  });
+
+  // Языковое меню
+  const languageDropdown = document.getElementById('languageDropdown');
+  const dropdownToggle = document.getElementById('dropdownToggle');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const selectedLanguage = document.getElementById('selectedLanguage');
+
+  dropdownToggle.addEventListener('click', () => {
+    languageDropdown.classList.toggle('open');
+  });
+
+  dropdownMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = link.getAttribute('data-lang');
+      changeLanguage(lang);  // <-- здесь вызываем смену языка при выборе
+      languageDropdown.classList.remove('open');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!languageDropdown.contains(e.target)) {
+      languageDropdown.classList.remove('open');
+    }
+  });
+
+  const translations = {
+    en: {
+      product: "PRODUCT",
+      homme: "HOMME",
+      femme: "FEMME",
+      collection: "COLLECTION",
+      login: "LOG IN",
+      search: "SEARCH"
+    },
+    ru: {
+      product: "ПРОДУКТЫ",
+      homme: "МУЖСКОЕ",
+      femme: "ЖЕНСКОЕ",
+      collection: "КОЛЛЕКЦИЯ",
+      login: "ВОЙТИ",
+      search: "ПОИСК"
+    },
+    uk: {
+      product: "ПРОДУКТ",
+      homme: "ЧОЛОВІЧЕ",
+      femme: "ЖІНОЧЕ",
+      collection: "КОЛЕКЦІЯ",
+      login: "УВІЙТИ",
+      search: "ПОШУК"
+    }
+  };
+
+  function changeLanguage(lang) {
+    localStorage.setItem('selectedLang', lang);
+    selectedLanguage.textContent = lang.toUpperCase();
+
+    document.querySelectorAll('[data-key]').forEach(el => {
+      const key = el.getAttribute('data-key');
+      if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    if (translations[lang] && translations[lang].search && searchInput) {
+      searchInput.textContent = translations[lang].search;
+    }
+  }
+
+  // Применяем язык при загрузке страницы
+  const savedLang = localStorage.getItem('selectedLang') || 'en';
+  changeLanguage(savedLang);
+</script>
+
+
+</body>
+</html>

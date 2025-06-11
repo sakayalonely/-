@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Профиль</title>
+</head>
+<body>
+  <h1>Добро пожаловать!</h1>
+  <p id="user-info">Загрузка данных...</p>
+  <a href="/logout">Выйти</a>
+
+  <script>
+    fetch('/api/user')
+      .then(res => res.json())
+      .then(data => {
+        if (data.user) {
+          document.getElementById('user-info').innerHTML = `
+            <p><strong>Имя:</strong> ${data.user.displayName}</p>
+            <p><strong>Email:</strong> ${data.user.email}</p>
+            <img src="${data.user.photo}" alt="Аватар" width="100" />
+          `;
+        } else {
+          document.getElementById('user-info').textContent = 'Вы не вошли в систему.';
+        }
+      });
+  </script>
+</body>
+</html>

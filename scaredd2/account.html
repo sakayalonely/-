@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ACCOUNT | HIMORA TSUKIHA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
+      font-family: 'Playfair Display', serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 0 0 40px 0;
+      font-weight: normal;
+    }
+
+    .email {
+      font-size: 14px;
+      margin-bottom: 40px;
+      opacity: 0.7;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 12px 20px;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HIMORA TSUKIHA</h1>
+  <div class="email" id="userEmail">LOADING...</div>
+  <button id="logoutBtn">LOG OUT</button>
+
+  <script>
+
+  // Проверяем, авторизован ли пользователь
+  function checkAuth() {
+    const loggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    const userEmailDiv = document.getElementById('userEmail');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (loggedIn) {
+      const email = localStorage.getItem('userEmail') || 'User';
+      userEmailDiv.textContent = `SIGNED IN AS ${email.toUpperCase()}`;
+      logoutBtn.style.display = 'inline-block';
+    } else {
+      userEmailDiv.textContent = 'Пожалуйста, войдите';
+      logoutBtn.style.display = 'none';
+      // Если не залогинен, можно сразу редиректить на страницу входа
+      // window.location.href = 'login.html';
+    }
+  }
+
+  // Функция выхода
+  function logout() {
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('userEmail');
+    window.location.href = 'index.html'; // или login.html
+  }
+
+  // Навешиваем обработчик на кнопку выхода
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+
+  // Проверяем статус при загрузке страницы
+  checkAuth();
+
+  </script>
+
+</body>
+</html>
